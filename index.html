@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hospital AI Chatbot</title>
 
+  <link
+    href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css"
+    rel="stylesheet"
+  />
+
   <style>
     * {
       box-sizing: border-box;
@@ -62,7 +67,9 @@
       margin: 0 auto 35px;
       padding: 0 20px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      grid-template-columns: repeat(
+        auto-fit, minmax(145px, 1fr)
+      );
       gap: 14px;
     }
 
@@ -87,7 +94,7 @@
 
     .chat-card {
       background: white;
-      width: min(650px, calc(100% - 30px));
+      width: min(750px, calc(100% - 30px));
       margin: 0 auto 45px;
       border-radius: 16px;
       overflow: hidden;
@@ -95,97 +102,41 @@
       border: 1px solid #dceaf1;
     }
 
-    .chat-header {
+    .chat-heading {
       background: #087e8b;
       color: white;
       padding: 19px;
     }
 
-    .chat-header h2 {
+    .chat-heading h2 {
       font-size: 19px;
       margin-bottom: 6px;
     }
 
-    .chat-header p {
+    .chat-heading p {
       font-size: 13px;
-      opacity: 0.9;
     }
 
-    #messages {
-      height: 320px;
-      overflow-y: auto;
-      padding: 18px;
-      background: #f8fbfd;
-    }
+    #n8n-chat {
+      width: 100%;
+      height: 560px;
+      min-height: 430px;
 
-    .message {
-      padding: 12px 14px;
-      margin-bottom: 12px;
-      border-radius: 12px;
-      max-width: 88%;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      font-size: 14px;
-    }
-
-    .bot {
-      background: #e3f3f5;
-      margin-right: auto;
-    }
-
-    .user {
-      background: #087e8b;
-      color: white;
-      margin-left: auto;
-    }
-
-    .quick-questions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      padding: 12px 15px 0;
-    }
-
-    .quick-questions button {
-      background: white;
-      color: #087e8b;
-      border: 1px solid #9acbd0;
-      border-radius: 20px;
-      padding: 8px 11px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .input-area {
-      display: flex;
-      gap: 10px;
-      padding: 15px;
-    }
-
-    #userInput {
-      flex: 1;
-      min-width: 0;
-      border: 1px solid #cadbe4;
-      border-radius: 9px;
-      padding: 13px;
-      font-size: 14px;
-      outline-color: #087e8b;
-    }
-
-    #sendBtn {
-      background: #087e8b;
-      color: white;
-      border: none;
-      padding: 0 20px;
-      border-radius: 9px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    #sendBtn:disabled {
-      opacity: 0.6;
-      cursor: wait;
+      --chat--color--primary: #087e8b;
+      --chat--color--primary-shade-50: #076d78;
+      --chat--color--primary--shade-100: #075b69;
+      --chat--color--secondary: #087e8b;
+      --chat--color--secondary-shade-50: #076d78;
+      --chat--color-white: #ffffff;
+      --chat--color-light: #f8fbfd;
+      --chat--color-light-shade-50: #e3f3f5;
+      --chat--color-light-shade-100: #dceaf1;
+      --chat--color-medium: #cadbe4;
+      --chat--color-dark: #18334a;
+      --chat--color-disabled: #cadbe4;
+      --chat--color-typing: #526879;
+      --chat--border-radius: 12px;
+      --chat--font-family: Arial, sans-serif;
     }
 
     .notice {
@@ -202,6 +153,20 @@
       background: #e4f0f5;
       color: #526879;
       font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 20px;
+      }
+
+      .hero {
+        padding: 35px 18px 25px;
+      }
+
+      #n8n-chat {
+        height: 520px;
+      }
     }
   </style>
 </head>
@@ -259,57 +224,18 @@
   </section>
 
   <section class="chat-card">
-    <div class="chat-header">
+    <div class="chat-heading">
       <h2>💬 Chat with our AI assistant</h2>
       <p>Ask a question to get started</p>
     </div>
 
-    <div id="messages" aria-live="polite">
-      <div class="message bot">
-        Hello! Welcome to Hospital AI Chatbot.
-
-        I can help you with:
-        • Appointment enquiries
-        • Department information
-        • Billing enquiries
-        • Technical support
-        • Human assistance
-
-        What would you like to know?
-      </div>
-    </div>
-
-    <div class="quick-questions">
-      <button onclick="askQuestion('What departments are available?')">
-        Departments
-      </button>
-      <button onclick="askQuestion('How can I enquire about an appointment?')">
-        Appointments
-      </button>
-      <button onclick="askQuestion('I have a billing question')">
-        Billing
-      </button>
-      <button onclick="askQuestion('I need human assistance')">
-        Human assistance
-      </button>
-    </div>
-
-    <form id="chatForm" class="input-area">
-      <input
-        id="userInput"
-        type="text"
-        placeholder="Type your question here..."
-        aria-label="Your question"
-        required
-        autocomplete="off"
-      >
-      <button id="sendBtn" type="submit">Send</button>
-    </form>
+    <!-- Official n8n chat widget mounts here -->
+    <div id="n8n-chat"></div>
 
     <p class="notice">
-      This chatbot provides general hospital information, not a medical
-      diagnosis. Do not enter passwords, payment details, or sensitive
-      medical information.
+      This chatbot provides general hospital information, not a
+      medical diagnosis. Do not enter passwords, payment details,
+      or sensitive medical information.
     </p>
   </section>
 
@@ -317,86 +243,35 @@
     © 2026 Hospital AI Chatbot | Sample student project
   </footer>
 
-  <script>
-    // STEP 1: Replace this with your n8n Production Webhook URL.
-    const WEBHOOK_URL = "https://sahithi1632.app.n8n.cloud/webhook/c894b9cb-371e-47b3-836c-77ce37fe3725/chat";
+  <script type="module">
+    import { createChat } from
+      'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-    const form = document.getElementById("chatForm");
-    const input = document.getElementById("userInput");
-    const messages = document.getElementById("messages");
-    const sendBtn = document.getElementById("sendBtn");
+    createChat({
+      webhookUrl:
+        'https://sahithi1632.app.n8n.cloud/webhook/c894b9cb-371e-47b3-836c-77ce37fe3725/chat',
 
-    function addMessage(text, sender) {
-      const message = document.createElement("div");
-      message.className = "message " + sender;
-      message.textContent = text;
-      messages.appendChild(message);
-      messages.scrollTop = messages.scrollHeight;
-      return message;
-    }
+      target: '#n8n-chat',
+      mode: 'fullscreen',
+      showWelcomeScreen: false,
+      defaultLanguage: 'en',
+      chatInputKey: 'chatInput',
+      chatSessionKey: 'sessionId',
 
-    async function askQuestion(question) {
-      if (!question.trim()) return;
+      initialMessages: [
+        'Hello! Welcome to Hospital AI Chatbot.',
+        'I can help with hospital departments, appointments, billing enquiries, and general information. How can I help you today?'
+      ],
 
-      addMessage(question, "user");
-      input.value = "";
-      sendBtn.disabled = true;
-      sendBtn.textContent = "...";
-
-      const loading = addMessage("Please wait, I am checking...", "bot");
-
-      try {
-        if (WEBHOOK_URL === "PASTE_YOUR_N8N_WEBHOOK_URL_HERE") {
-          throw new Error("Please configure your n8n webhook URL first.");
+      i18n: {
+        en: {
+          title: 'Hospital AI Assistant',
+          subtitle: 'How can we help you today?',
+          footer: '',
+          getStarted: 'Start a conversation',
+          inputPlaceholder: 'Type your question here...'
         }
-
-        const response = await fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: question,
-            chatInput: question
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error("The chatbot service returned an error.");
-        }
-
-        const data = await response.json();
-
-        // Supports common n8n response formats.
-        const reply =
-          data.reply ??
-          data.output ??
-          data.text ??
-          data.response ??
-          data.message ??
-          data.data?.reply ??
-          data.data?.output;
-
-        loading.textContent =
-          typeof reply === "string"
-            ? reply
-            : "The workflow responded, but its reply format needs to be checked in n8n.";
-
-      } catch (error) {
-        loading.textContent =
-          "I couldn't connect to the chatbot. Please check the n8n webhook URL, " +
-          "make sure the workflow is active, and check its CORS settings.";
-        console.error(error);
-      } finally {
-        sendBtn.disabled = false;
-        sendBtn.textContent = "Send";
-        input.focus();
       }
-    }
-
-    form.addEventListener("submit", function(event) {
-      event.preventDefault();
-      askQuestion(input.value.trim());
     });
   </script>
 </body>
