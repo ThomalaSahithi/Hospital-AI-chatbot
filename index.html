@@ -1,278 +1,365 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hospital AI Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b49">
+  <meta name="description" content="Hospital information, department enquiries, appointment guidance, and support from our Hospital AI Assistant.">
+  <title>Hospital AI | Care. Guidance. Support.</title>
 
-  <link
-    href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css"
-    rel="stylesheet"
-  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
+    :root {
+      --navy: #102b49;
+      --blue: #087e9b;
+      --teal: #16b8ae;
+      --light: #f3f8fc;
+      --text: #263b52;
+      --muted: #65758a;
+      --white: #fff;
+      --border: #e2eaf2;
+      --radius: 20px;
+      --shadow: 0 14px 40px rgba(16, 43, 73, .09);
+
+      --chat--color-primary: #087e9b;
+      --chat--color-primary-shade-50: #06667e;
+      --chat--color-primary-shade-100: #07566a;
+      --chat--window--border-radius: 16px;
+      --chat--message--bot--background: #edf7fb;
+      --chat--message--user--background: #087e9b;
+      --chat--message--user--color: #fff;
+      --chat--toggle--background: #087e9b;
+      --chat--font-family: "DM Sans", sans-serif;
     }
 
-    body {
-      background: #f1f7fc;
-      color: #18334a;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body { font-family: "DM Sans", sans-serif; color: var(--text); background: var(--white); line-height: 1.7; }
+    h1, h2, h3, h4 { font-family: "Manrope", sans-serif; color: var(--navy); line-height: 1.2; }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .container { width: min(1120px, 90%); margin-inline: auto; }
+    .section { padding: 84px 0; }
+    .section-heading { max-width: 680px; margin: 0 auto 42px; text-align: center; }
+    .eyebrow { display: inline-block; margin-bottom: 12px; color: var(--blue); font-size: .78rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+    .section-heading h2 { margin-bottom: 14px; font-size: clamp(2rem, 4vw, 2.8rem); letter-spacing: -1.3px; }
+    .section-heading p { color: var(--muted); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 49px; padding: 12px 22px; border: 1px solid transparent; border-radius: 12px; font: inherit; font-weight: 700; cursor: pointer; transition: transform .2s, background .2s; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { color: #fff; background: var(--blue); box-shadow: 0 8px 20px rgba(8,126,155,.18); }
+    .btn-primary:hover { background: #06667e; }
+    .btn-outline { color: var(--navy); border-color: #cbd9e7; background: #fff; }
+    .navbar { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(14px); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-family: "Manrope", sans-serif; font-size: 1.12rem; font-weight: 800; color: var(--navy); white-space: nowrap; }
+    .brand-icon { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 13px; color: #fff; background: linear-gradient(135deg, var(--blue), var(--teal)); font-size: 1.4rem; }
+    .nav-links { display: flex; align-items: center; gap: 25px; font-size: .92rem; font-weight: 600; }
+    .nav-links a:not(.btn):hover { color: var(--blue); }
+    .menu-toggle { display: none; border: 0; background: transparent; color: var(--navy); font-size: 1.7rem; cursor: pointer; }
+    .hero { position: relative; overflow: hidden; padding: 78px 0 86px; background: radial-gradient(ellipse at 85% 15%, rgba(22,184,174,.16), transparent 34%), radial-gradient(ellipse at 0% 100%, rgba(8,126,155,.10), transparent 35%), linear-gradient(135deg, #f4f9ff 0%, #edf8fb 100%); }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 54px; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 23px; padding: 7px 13px; border: 1px solid #d4e8ee; border-radius: 50px; color: #086e83; background: rgba(255,255,255,.8); font-size: .8rem; font-weight: 700; }
+    .hero-tag span { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+    .hero h1 { margin-bottom: 23px; font-size: clamp(2.65rem, 5.2vw, 4.2rem); letter-spacing: -2.8px; }
+    .hero h1 span { color: var(--blue); }
+    .hero-copy { max-width: 540px; margin-bottom: 30px; color: var(--muted); font-size: 1.08rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; }
+    .hero-note { display: flex; align-items: center; gap: 9px; margin-top: 24px; color: var(--muted); font-size: .88rem; }
+    .hero-note strong { color: var(--navy); }
+    .hero-visual { position: relative; min-height: 390px; display: grid; place-items: center; border-radius: 28px; overflow: hidden; background: radial-gradient(circle at 70% 25%, rgba(22,184,174,.28), transparent 25%), linear-gradient(145deg, #dff2f8, #c6e5ef); box-shadow: 0 25px 55px rgba(16,43,73,.12); }
+    .medical-illustration { font-size: clamp(7rem, 17vw, 12rem); filter: drop-shadow(0 15px 18px rgba(16,43,73,.12)); }
+    .hero-float { position: absolute; right: 18px; bottom: 20px; padding: 15px 18px; border: 1px solid rgba(255,255,255,.85); border-radius: 15px; background: rgba(255,255,255,.96); box-shadow: var(--shadow); color: var(--navy); font-weight: 700; }
+    .hero-float small { display: block; color: var(--muted); font-weight: 500; }
+    .benefits { padding: 30px 0; border-bottom: 1px solid var(--border); }
+    .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .benefit { display: flex; align-items: center; gap: 13px; }
+    .benefit-icon { display: grid; flex-shrink: 0; width: 48px; height: 48px; place-items: center; border-radius: 14px; color: var(--blue); background: #eaf6fb; font-size: 1.35rem; }
+    .benefit strong { display: block; color: var(--navy); font-size: .91rem; }
+    .benefit small { color: var(--muted); font-size: .78rem; }
+    .departments { background: var(--light); }
+    .department-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .department-card { padding: 25px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; text-align: center; transition: transform .2s, box-shadow .2s; }
+    .department-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .department-card span { display: block; margin-bottom: 13px; font-size: 2.2rem; }
+    .department-card h3 { margin-bottom: 8px; font-size: 1.05rem; }
+    .department-card p { color: var(--muted); font-size: .88rem; }
+    .about-grid { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 60px; }
+    .about-art { display: grid; min-height: 340px; place-items: center; border-radius: 26px; background: radial-gradient(circle at 75% 25%, rgba(22,184,174,.25), transparent 30%), linear-gradient(145deg, #e5f4fc, #f1f8fc); }
+    .about-art-inner { display: grid; width: 180px; height: 180px; place-items: center; border: 1px solid rgba(8,126,155,.15); border-radius: 42px; background: rgba(255,255,255,.8); box-shadow: var(--shadow); font-size: 4.7rem; }
+    .about-copy h2 { margin-bottom: 20px; font-size: clamp(2rem, 4vw, 2.7rem); letter-spacing: -1.3px; }
+    .about-copy > p { margin-bottom: 25px; color: var(--muted); }
+    .check-list { display: grid; gap: 14px; margin-bottom: 28px; list-style: none; }
+    .check-list li { display: flex; align-items: flex-start; gap: 12px; font-weight: 600; }
+    .check { display: grid; flex-shrink: 0; width: 25px; height: 25px; place-items: center; border-radius: 50%; color: #087b73; background: #e2f8f1; font-size: .8rem; }
+    .assistant-section { padding: 78px 0; background: var(--navy); color: #fff; }
+    .assistant-grid { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 35px; }
+    .assistant-section h2 { margin-bottom: 15px; color: #fff; font-size: clamp(2rem, 4vw, 2.8rem); }
+    .assistant-section p { max-width: 650px; color: #c5d4e2; }
+    .assistant-icon { display: grid; width: 100px; height: 100px; place-items: center; border: 1px solid rgba(255,255,255,.18); border-radius: 28px; background: rgba(255,255,255,.08); font-size: 3.1rem; }
+    .chat-section { background: var(--light); }
+    .chat-panel { width: min(900px, 100%); margin: 0 auto; overflow: hidden; border: 1px solid var(--border); border-radius: 20px; background: #fff; box-shadow: var(--shadow); }
+    .chat-panel-heading { padding: 22px 25px; color: #fff; background: var(--blue); }
+    .chat-panel-heading h3 { color: #fff; margin-bottom: 5px; }
+    .chat-panel-heading p { color: #e5f8fa; font-size: .9rem; }
+    #n8n-chat { width: 100%; min-height: 520px; }
+    .notice { padding: 16px 22px 22px; color: var(--muted); font-size: .82rem; line-height: 1.6; text-align: center; }
+    .contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 45px; }
+    .contact-copy h2 { margin-bottom: 17px; font-size: 2.35rem; letter-spacing: -1px; }
+    .contact-copy p { margin-bottom: 22px; color: var(--muted); }
+    .contact-item { display: flex; align-items: flex-start; gap: 13px; margin: 17px 0; }
+    .contact-item > span { display: grid; width: 44px; height: 44px; flex-shrink: 0; place-items: center; border-radius: 12px; background: #eaf6fb; font-size: 1.2rem; }
+    .contact-item strong { display: block; color: var(--navy); font-size: .92rem; }
+    .contact-item small { color: var(--muted); }
+    .contact-note { padding: 27px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
+    .contact-note h3 { margin-bottom: 12px; }
+    .contact-note p { margin-bottom: 18px; color: var(--muted); }
+    footer { padding: 32px 0; color: #c3d1df; background: #0b2036; }
+    .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,.12); }
+    .footer-brand { color: #fff; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 20px; font-size: .88rem; }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 20px; font-size: .82rem; }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
+      .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+      .department-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { gap: 14px; }
     }
-
-    header {
-      background: #087e8b;
-      color: white;
-      padding: 22px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
+    @media (max-width: 680px) {
+      .section { padding: 62px 0; }
+      .nav-inner { min-height: 68px; }
+      .brand { font-size: 1rem; }
+      .brand-icon { width: 39px; height: 39px; }
+      .menu-toggle { display: block; }
+      .nav-links { position: absolute; top: 68px; left: 0; right: 0; display: none; align-items: stretch; gap: 0; padding: 12px 5% 20px; border-bottom: 1px solid var(--border); background: #fff; }
+      .nav-links.open { display: flex; flex-direction: column; }
+      .nav-links a:not(.btn) { padding: 12px 0; }
+      .nav-links .btn { margin-top: 8px; }
+      .hero { padding: 54px 0 62px; }
+      .hero-grid, .about-grid, .contact-grid, .assistant-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: clamp(2.5rem, 11vw, 3.7rem); letter-spacing: -1.8px; }
+      .hero-visual { min-height: 290px; }
+      .benefits-grid { gap: 20px 12px; }
+      .benefit { align-items: flex-start; gap: 10px; }
+      .benefit-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+      .department-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .department-card { padding: 20px 12px; }
+      .about-art { min-height: 250px; }
+      .assistant-grid { gap: 24px; }
+      .assistant-icon { width: 72px; height: 72px; font-size: 2.3rem; }
+      .footer-top { align-items: flex-start; flex-direction: column; }
+      .footer-bottom { flex-direction: column; }
     }
-
-    header h1 {
-      font-size: 25px;
-    }
-
-    header p {
-      margin-top: 6px;
-      font-size: 13px;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 55px 20px 35px;
-    }
-
-    .hero h2 {
-      font-size: clamp(28px, 5vw, 42px);
-      margin-bottom: 14px;
-      color: #075b69;
-    }
-
-    .hero p {
-      max-width: 620px;
-      margin: auto;
-      line-height: 1.7;
-      color: #526879;
-    }
-
-    .departments {
-      max-width: 1000px;
-      margin: 0 auto 35px;
-      padding: 0 20px;
-      display: grid;
-      grid-template-columns: repeat(
-        auto-fit, minmax(145px, 1fr)
-      );
-      gap: 14px;
-    }
-
-    .department {
-      background: white;
-      padding: 19px 12px;
-      text-align: center;
-      border-radius: 12px;
-      border: 1px solid #dceaf1;
-      box-shadow: 0 4px 12px #17384b0a;
-    }
-
-    .department span {
-      font-size: 25px;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .department h3 {
-      font-size: 15px;
-    }
-
-    .chat-card {
-      background: white;
-      width: min(750px, calc(100% - 30px));
-      margin: 0 auto 45px;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px #17384b16;
-      border: 1px solid #dceaf1;
-    }
-
-    .chat-heading {
-      background: #087e8b;
-      color: white;
-      padding: 19px;
-    }
-
-    .chat-heading h2 {
-      font-size: 19px;
-      margin-bottom: 6px;
-    }
-
-    .chat-heading p {
-      font-size: 13px;
-    }
-
-    #n8n-chat {
-      width: 100%;
-      height: 560px;
-      min-height: 430px;
-
-      --chat--color--primary: #087e8b;
-      --chat--color--primary-shade-50: #076d78;
-      --chat--color--primary--shade-100: #075b69;
-      --chat--color--secondary: #087e8b;
-      --chat--color--secondary-shade-50: #076d78;
-      --chat--color-white: #ffffff;
-      --chat--color-light: #f8fbfd;
-      --chat--color-light-shade-50: #e3f3f5;
-      --chat--color-light-shade-100: #dceaf1;
-      --chat--color-medium: #cadbe4;
-      --chat--color-dark: #18334a;
-      --chat--color-disabled: #cadbe4;
-      --chat--color-typing: #526879;
-      --chat--border-radius: 12px;
-      --chat--font-family: Arial, sans-serif;
-    }
-
-    .notice {
-      font-size: 12px;
-      color: #657989;
-      text-align: center;
-      padding: 0 18px 18px;
-      line-height: 1.5;
-    }
-
-    footer {
-      text-align: center;
-      padding: 22px;
-      background: #e4f0f5;
-      color: #526879;
-      font-size: 13px;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        padding: 20px;
-      }
-
-      .hero {
-        padding: 35px 18px 25px;
-      }
-
-      #n8n-chat {
-        height: 520px;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div>
-      <h1>🏥 Hospital AI Chatbot</h1>
-      <p>Your hospital information assistant</p>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="#home" class="brand" aria-label="Hospital AI home">
+        <span class="brand-icon">✚</span><span>Hospital AI</span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#departments">Departments</a>
+        <a href="#about">About</a>
+        <a href="#assistant">AI Assistant</a>
+        <a class="btn btn-primary" href="#assistant">Ask a Question ↗</a>
+      </nav>
     </div>
-    <div>Available 24/7</div>
   </header>
 
-  <section class="hero">
-    <h2>How can we help you?</h2>
-    <p>
-      Ask about appointments, hospital departments, billing,
-      technical support, or assistance from hospital staff.
-    </p>
-  </section>
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-tag"><span></span> HOSPITAL INFORMATION & PATIENT SUPPORT</div>
+          <h1>Care that puts <span>people first.</span></h1>
+          <p class="hero-copy">Find general information about hospital departments, appointment enquiries, billing support, and how to reach the right team.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#departments">Explore Departments →</a>
+            <button class="btn btn-outline" id="chatCta" type="button">✦ Chat with AI Assistant</button>
+          </div>
+          <p class="hero-note"><span>✓</span><span><strong>Here to help, 24/7</strong> — with general hospital information.</span></p>
+        </div>
+        <div class="hero-visual" role="img" aria-label="Medical cross illustration">
+          <div class="medical-illustration" aria-hidden="true">🏥</div>
+          <div class="hero-float">Patient information<small>Helpful guidance, one step at a time</small></div>
+        </div>
+      </div>
+    </section>
 
-  <section class="departments">
-    <div class="department">
-      <span>🩺</span>
-      <h3>General Medicine</h3>
-    </div>
-    <div class="department">
-      <span>👂</span>
-      <h3>ENT</h3>
-    </div>
-    <div class="department">
-      <span>❤️</span>
-      <h3>Cardiology</h3>
-    </div>
-    <div class="department">
-      <span>🦴</span>
-      <h3>Orthopedics</h3>
-    </div>
-    <div class="department">
-      <span>🧒</span>
-      <h3>Pediatrics</h3>
-    </div>
-    <div class="department">
-      <span>🧠</span>
-      <h3>Neurology</h3>
-    </div>
-    <div class="department">
-      <span>👁️</span>
-      <h3>Ophthalmology</h3>
-    </div>
-    <div class="department">
-      <span>🩹</span>
-      <h3>Dermatology</h3>
-    </div>
-  </section>
+    <section class="benefits" aria-label="Support options">
+      <div class="container benefits-grid">
+        <div class="benefit"><div class="benefit-icon">🩺</div><div><strong>Department Info</strong><small>Explore hospital services</small></div></div>
+        <div class="benefit"><div class="benefit-icon">📅</div><div><strong>Appointments</strong><small>Learn how to enquire</small></div></div>
+        <div class="benefit"><div class="benefit-icon">₹</div><div><strong>Billing Support</strong><small>General billing guidance</small></div></div>
+        <div class="benefit"><div class="benefit-icon">🤝</div><div><strong>Human Assistance</strong><small>Find the right support team</small></div></div>
+      </div>
+    </section>
 
-  <section class="chat-card">
-    <div class="chat-heading">
-      <h2>💬 Chat with our AI assistant</h2>
-      <p>Ask a question to get started</p>
-    </div>
+    <section class="section departments" id="departments">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Hospital Services</span>
+          <h2>Explore Our Departments</h2>
+          <p>Browse common hospital departments. Contact the hospital directly to confirm services, doctors, timings, and availability.</p>
+        </div>
+        <div class="department-grid">
+          <article class="department-card"><span>🩺</span><h3>General Medicine</h3><p>General health consultations and care information.</p></article>
+          <article class="department-card"><span>❤️</span><h3>Cardiology</h3><p>Information about heart-care services.</p></article>
+          <article class="department-card"><span>🦴</span><h3>Orthopedics</h3><p>Information about bone and joint services.</p></article>
+          <article class="department-card"><span>🧒</span><h3>Pediatrics</h3><p>Information about children's healthcare.</p></article>
+          <article class="department-card"><span>👂</span><h3>ENT</h3><p>Ear, nose, and throat department information.</p></article>
+          <article class="department-card"><span>🧠</span><h3>Neurology</h3><p>Information about nervous-system care services.</p></article>
+          <article class="department-card"><span>👁️</span><h3>Ophthalmology</h3><p>Information about eye-care services.</p></article>
+          <article class="department-card"><span>🩹</span><h3>Dermatology</h3><p>Information about skin-care services.</p></article>
+        </div>
+      </div>
+    </section>
 
-    <!-- Official n8n chat widget mounts here -->
-    <div id="n8n-chat"></div>
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <div class="about-art" aria-hidden="true"><div class="about-art-inner">🩺</div></div>
+        <div class="about-copy">
+          <span class="eyebrow">About the Assistant</span>
+          <h2>A simpler way to find hospital information</h2>
+          <p>The Hospital AI Assistant can help with general hospital enquiries and direct you toward the appropriate team. It is an information assistant, not a substitute for a qualified healthcare professional.</p>
+          <ul class="check-list">
+            <li><span class="check">✓</span> Ask about departments and general services</li>
+            <li><span class="check">✓</span> Get guidance about appointment enquiries</li>
+            <li><span class="check">✓</span> Find general billing and support information</li>
+            <li><span class="check">✓</span> Ask how to contact hospital staff</li>
+          </ul>
+          <a class="btn btn-primary" href="#assistant">Ask the AI Assistant →</a>
+        </div>
+      </div>
+    </section>
 
-    <p class="notice">
-      This chatbot provides general hospital information, not a
-      medical diagnosis. Do not enter passwords, payment details,
-      or sensitive medical information.
-    </p>
-  </section>
+    <section class="assistant-section">
+      <div class="container assistant-grid">
+        <div>
+          <span class="eyebrow" style="color:#66e2d5">YOUR DIGITAL GUIDE</span>
+          <h2>Have a question? Let's help.</h2>
+          <p>Use the Hospital AI Assistant for general information. For urgent symptoms or a medical emergency, contact local emergency services or go to the nearest emergency department.</p>
+          <div style="margin-top:25px"><button class="btn btn-primary" id="chatCta2" type="button" style="background:#16b8ae;color:#102b49">Open Hospital Assistant ✦</button></div>
+        </div>
+        <div class="assistant-icon" aria-hidden="true">💬</div>
+      </div>
+    </section>
+
+    <section class="section chat-section" id="assistant">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Hospital AI Assistant</span>
+          <h2>Chat with our assistant</h2>
+          <p>Ask a general question below. Please do not enter passwords, payment-card details, or private medical information.</p>
+        </div>
+        <div class="chat-panel">
+          <div class="chat-panel-heading">
+            <h3>💬 Hospital AI Assistant</h3>
+            <p>General hospital information and support</p>
+          </div>
+          <div id="n8n-chat"></div>
+          <p class="notice">This chatbot does not diagnose conditions or provide emergency care. Do not use it for urgent medical decisions. Confirm hospital services, appointments, and billing details with hospital staff.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container contact-grid">
+        <div class="contact-copy">
+          <span class="eyebrow">Need more help?</span>
+          <h2>Contact the hospital team</h2>
+          <p>For confirmed appointment times, doctor availability, bills, or personal medical questions, contact the hospital through its official channels.</p>
+          <div class="contact-item"><span>☎</span><div><strong>Hospital phone</strong><small>Add your official hospital phone number</small></div></div>
+          <div class="contact-item"><span>✉</span><div><strong>Email</strong><small>Add your official hospital email address</small></div></div>
+          <div class="contact-item"><span>⌖</span><div><strong>Location</strong><small>Add your hospital address</small></div></div>
+        </div>
+        <div class="contact-note">
+          <h3>Important health and privacy notice</h3>
+          <p>This demonstration website provides general information only. It is not connected to a medical record system and cannot confirm appointments or payments.</p>
+          <p><strong>For an emergency:</strong> contact local emergency services or visit the nearest emergency department. Do not wait for a chatbot response.</p>
+          <p>Only add real hospital contact details after confirming them with the hospital.</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <footer>
-    © 2026 Hospital AI Chatbot | Sample student project
+    <div class="container">
+      <div class="footer-top">
+        <a href="#home" class="brand footer-brand"><span class="brand-icon">✚</span><span>Hospital AI</span></a>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="#home">Home</a><a href="#departments">Departments</a><a href="#about">About</a><a href="#assistant">AI Assistant</a><a href="#contact">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-bottom"><p>© <span id="year"></span> Hospital AI Chatbot | Student project</p><p>Care. Guidance. Support.</p></div>
+    </div>
   </footer>
 
   <script type="module">
-    import { createChat } from
-      'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+    // Use the exact Chat URL displayed in your n8n Chat Trigger.
+    // This is the URL you previously supplied for the Hospital AI workflow.
+    const N8N_CHAT_URL = 'https://sahithi1632.app.n8n.cloud/webhook/c894b9cb-371e-47b3-836c-77ce37fe3725/chat';
 
     createChat({
-      webhookUrl:
-        'https://sahithi1632.app.n8n.cloud/webhook/c894b9cb-371e-47b3-836c-77ce37fe3725/chat',
-
+      webhookUrl: N8N_CHAT_URL,
       target: '#n8n-chat',
       mode: 'fullscreen',
       showWelcomeScreen: false,
       defaultLanguage: 'en',
       chatInputKey: 'chatInput',
       chatSessionKey: 'sessionId',
-
       initialMessages: [
-        'Hello! Welcome to Hospital AI Chatbot.',
-        'I can help with hospital departments, appointments, billing enquiries, and general information. How can I help you today?'
+        'Hello! Welcome to the Hospital AI Assistant.',
+        'I can help with general department, appointment, billing, and support enquiries. How can I help?'
       ],
-
       i18n: {
         en: {
           title: 'Hospital AI Assistant',
-          subtitle: 'How can we help you today?',
+          subtitle: 'General hospital information and support',
           footer: '',
           getStarted: 'Start a conversation',
           inputPlaceholder: 'Type your question here...'
         }
       }
     });
+  </script>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.textContent = isOpen ? '✕' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.textContent = '☰';
+      });
+    });
+
+    function goToAssistant() {
+      document.getElementById('assistant').scrollIntoView({ behavior: 'smooth' });
+    }
+    document.getElementById('chatCta').addEventListener('click', goToAssistant);
+    document.getElementById('chatCta2').addEventListener('click', goToAssistant);
   </script>
 </body>
 </html>
