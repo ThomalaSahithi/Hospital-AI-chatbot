@@ -1,203 +1,34 @@
 # Hospital AI Chatbot
 
-An AI-powered hospital information and support chatbot built using **n8n** and a responsive HTML, CSS, and JavaScript website. The project demonstrates AI-based intent classification and workflow routing for common healthcare enquiries using fictional sample data.
+## Project Overview
+Hospital AI Chatbot is a web-based chatbot built using n8n and AI to handle general hospital enquiries. It provides users with information and support through a simple website interface.
 
-## 🌐 Live Website
-
-**Website:** https://hospital-ai-chatbot-beta.vercel.app/
-
-**GitHub Repository:** https://github.com/ThomalaSahithi/Hospital-AI-chatbot
-
-## 📌 Project Overview
-
-The Hospital AI Chatbot helps users navigate common hospital-related enquiries through a simple web interface. It uses an n8n workflow to classify user messages and direct them to the appropriate response branch.
-
-The project combines workflow automation, AI-based classification, conditional logic, sample data filtering, and website integration.
-
-## ✨ Features
-
-- **Appointment Enquiries:** Provides general appointment and department information.
-- **Doctor Information:** Displays a fictional sample doctor directory with specialties and sample availability.
-- **Billing Enquiries:** Answers common billing questions using fictional fees and sample FAQs.
-- **Technical Support:** Provides guidance for common website and portal issues.
-- **Human Assistance:** Explains how users can contact the hospital's verified support team.
-- **General Questions:** Responds to general greetings and enquiries.
-- **Emergency Keyword Check:** Uses an IF node to detect selected emergency-related phrases and return a safety notice.
-- **AI Intent Classification:** Uses an OpenAI Chat Model through n8n to classify user messages.
-- **Workflow Routing:** Uses IF and Switch nodes to direct enquiries to different response branches.
+## Features
+- **Appointment Enquiries:** Provides general appointment information.
+- **Doctor Information:** Displays sample doctor details and specialties.
+- **Billing Enquiries:** Provides sample billing information and fees.
+- **Technical Support:** Offers guidance for website and login issues.
+- **Human Assistance:** Guides users on contacting hospital support.
+- **General Questions:** Responds to general user enquiries.
+- **Emergency Keyword Check:** Uses an IF node to identify selected emergency-related phrases.
+- **AI-Based Routing:** Uses an AI model to classify enquiries and a Switch node to route them.
 - **Data Filtering:** Uses a Filter node to exclude inactive sample doctor records.
-- **Website Integration:** Embeds the n8n chat interface into a responsive website.
-- **Responsive Design:** Supports desktop and mobile browsers.
+- **Website Integration:** Connects the chatbot to a website using the n8n Chat Trigger.
 
-## 🛠️ Technologies Used
+## Technologies Used
+- n8n
+- OpenAI Chat Model
+- HTML
+- CSS
+- JavaScript
+- GitHub
+- Vercel
 
-- **n8n** — Workflow automation and chatbot orchestration
-- **OpenAI Chat Model** — AI-based intent classification
-- **HTML5** — Website structure
-- **CSS3** — Styling and responsive layout
-- **JavaScript** — Website interaction and chatbot integration
-- **GitHub** — Source code management
-- **Vercel** — Website hosting and deployment
+## Workflow
+The n8n workflow uses Chat Trigger, Edit Fields, IF, Basic LLM Chain, OpenAI Chat Model, Switch, Filter, and Code nodes to process enquiries and generate responses.
 
-## 🔄 Workflow Architecture
+## Website
+https://hospital-ai-chatbot-beta.vercel.app/
 
-The chatbot uses the following high-level workflow:
-
-```text
-Chat Trigger
-    |
-Edit Fields — Normalize Input
-    |
-IF — Emergency Keyword Check
-    |
-    | True
-    +----> Emergency Safety Response
-    |
-    | False
-    +----> Basic LLM Chain + OpenAI Chat Model
-                 |
-                 v
-          AI Intent Classification
-                 |
-                 v
-          Switch — Intent Router
-                 |
-       +---------+----------+----------+----------+----------+
-       |         |          |          |          |          |
-   Appointment  Doctor    Billing   Technical   Human     General
-    Response   Response  Response   Support   Assistance  Response
-                          |
-                    Filter Node
-                  (Active sample doctors
-                   on the doctor branch)
-```
-
-The AI classifier identifies one of six categories:
-
-- `appointments`
-- `doctor_information`
-- `billing`
-- `technical_support`
-- `human_assistance`
-- `general`
-
-The Switch node compares the classification against the configured routing rules and sends the enquiry to the matching response branch.
-
-The emergency keyword check is a basic demonstration and is not a reliable medical emergency detector.
-
-## 📂 Project Structure
-
-```text
-Hospital-AI-chatbot/
-├── index.html
-└── README.md
-```
-
-The n8n workflow can be exported separately as a JSON file and imported into another n8n instance.
-
-## ⚙️ Setup and Installation
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/ThomalaSahithi/Hospital-AI-chatbot.git
-cd Hospital-AI-chatbot
-```
-
-Alternatively, download the repository as a ZIP file from GitHub.
-
-### 2. Configure the n8n workflow
-
-1. Open your n8n instance.
-2. Import the exported Hospital AI workflow JSON, if you are setting it up in a new instance.
-3. Configure the OpenAI Chat Model using your own n8n credential.
-4. Verify the Chat Trigger, IF, Basic LLM Chain, Switch, Filter, and response nodes.
-5. Test the enquiry routes in n8n.
-6. Publish the workflow when testing is complete.
-
-### 3. Connect the website to n8n
-
-Open `index.html` and locate the `N8N_CHAT_URL` setting:
-
-```javascript
-const N8N_CHAT_URL = 'PASTE_YOUR_N8N_PRODUCTION_CHAT_URL_HERE';
-```
-
-Replace the placeholder with the Production Chat URL generated by your n8n Chat Trigger.
-
-Ensure that the Chat Trigger is configured for embedded chat and public access as required by your n8n instance.
-
-**Important:** Use your actual Production URL. Do not use a temporary test URL for the live website.
-
-### 4. Run the website locally
-
-Open `index.html` in a modern web browser.
-
-For more reliable testing, use a local development server or deploy the website to a static hosting platform.
-
-### 5. Deploy with GitHub and Vercel
-
-1. Commit and push the website changes to the `main` branch of your GitHub repository.
-2. Connect the repository to Vercel if it is not already connected.
-3. Allow Vercel to build and deploy the website.
-4. Open the deployed URL and test the chatbot.
-5. If you change the n8n workflow, publish the updated workflow and verify the live integration.
-
-## 🧪 Testing
-
-Use the following sample messages to test the workflow:
-
-| Test Message | Expected Route |
-|---|---|
-| I want to book an appointment | Appointment Response |
-| Show me cardiologists | Doctor Information Response |
-| What is the consultation fee? | Billing Response |
-| My hospital portal login is not working | Technical Support Response |
-| I want to speak to a human | Human Assistance Response |
-| Hi, what can you help me with? | General Response |
-| I have chest pain | Emergency Safety Response |
-
-After sending each message, inspect the n8n execution to confirm that the classifier, Switch output, and relevant response node execute successfully.
-
-## 🗂️ Sample Data
-
-This project uses fictional doctor names, availability schedules, and billing amounts for demonstration purposes.
-
-The sample data does not represent actual doctors, appointment slots, hospital fees, patient records, invoices, or payments.
-
-The workflow does not connect to a real appointment booking system, hospital database, billing platform, or live staff handoff system.
-
-## 🔐 Security and Privacy
-
-- Do not store API keys or other credentials in `index.html`.
-- Configure AI credentials securely inside n8n.
-- Do not enter passwords, payment credentials, or sensitive patient information when testing the demonstration.
-- Configure appropriate access controls and allowed origins before deploying.
-- Review data retention, privacy, and security requirements before connecting any real healthcare systems.
-
-## ⚠️ Disclaimer
-
-This project is an educational demonstration of AI-based enquiry routing and workflow automation.
-
-It is not a medical advice service, clinical decision-support system, or emergency service. The emergency keyword check may miss emergencies and must not be relied upon for triage.
-
-For a possible medical emergency, contact local emergency services or seek immediate professional medical attention.
-
-All sample data is fictional.
-
-## 🚀 Future Enhancements
-
-- Integrate a real appointment booking service.
-- Connect to an approved provider directory.
-- Add secure billing enquiry integrations.
-- Implement a real human support handoff or ticketing system.
-- Add persistent conversation history with appropriate privacy controls.
-- Improve intent confidence handling and fallback routing.
-- Add automated workflow tests and monitoring.
-- Implement accessibility and multilingual support.
-
-## 👩‍💻 Author
-
-**Hospital AI Chatbot Project**
-
-Developed as a demonstration of AI-based intent classification, n8n workflow automation, conditional routing, filtering, and website integration.
+## Note
+This project uses fictional sample doctor information and billing fees for demonstration purposes. It does not provide medical advice or connect to real hospital booking or billing systems.
