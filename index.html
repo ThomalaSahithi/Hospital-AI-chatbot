@@ -1,12 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#102b49">
-  <meta name="description" content="Hospital information, department enquiries, appointment guidance, and support from our Hospital AI Assistant.">
-  <title>Hospital AI | Care. Guidance. Support.</title>
+  <meta name="theme-color" content="#12304a">
+  <meta name="description" content="Hospital AI helps people navigate care-related enquiries, provider information, billing FAQs, digital support and human assistance. Demonstration website powered by n8n and fictional sample data.">
+  <title>Hospital AI | Care Navigation & Support</title>
 
+  <!-- Official n8n chat widget stylesheet -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,352 +15,280 @@
 
   <style>
     :root {
-      --navy: #102b49;
-      --blue: #087e9b;
-      --teal: #16b8ae;
-      --light: #f3f8fc;
-      --text: #263b52;
-      --muted: #65758a;
-      --white: #fff;
-      --border: #e2eaf2;
-      --radius: 20px;
-      --shadow: 0 14px 40px rgba(16, 43, 73, .09);
+      --navy: #12304a;
+      --navy-2: #1c4864;
+      --teal: #0d9c91;
+      --teal-dark: #087f78;
+      --mint: #eaf8f5;
+      --text: #213d52;
+      --muted: #6e8293;
+      --border: #e1eaf0;
+      --background: #f4f8fb;
+      --white: #ffffff;
+      --shadow: 0 18px 50px rgba(18, 48, 74, 0.08);
 
-      --chat--color-primary: #087e9b;
-      --chat--color-primary-shade-50: #06667e;
-      --chat--color-primary-shade-100: #07566a;
+      /* Theme variables for the n8n chat widget */
+      --chat--color-primary: #0d9c91;
+      --chat--color-primary-shade-50: #087f78;
+      --chat--color-primary-shade-100: #076d68;
+      --chat--color-secondary: #12304a;
       --chat--window--border-radius: 16px;
-      --chat--message--bot--background: #edf7fb;
-      --chat--message--user--background: #087e9b;
-      --chat--message--user--color: #fff;
-      --chat--toggle--background: #087e9b;
+      --chat--message--bot--background: #eef7f8;
+      --chat--message--user--background: #0d9c91;
+      --chat--message--user--color: #ffffff;
+      --chat--toggle--background: #0d9c91;
       --chat--font-family: "DM Sans", sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
-    body { font-family: "DM Sans", sans-serif; color: var(--text); background: var(--white); line-height: 1.7; }
-    h1, h2, h3, h4 { font-family: "Manrope", sans-serif; color: var(--navy); line-height: 1.2; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--background);
+      font-family: "DM Sans", sans-serif;
+      line-height: 1.6;
+    }
     a { color: inherit; text-decoration: none; }
-    button, a { -webkit-tap-highlight-color: transparent; }
-    .container { width: min(1120px, 90%); margin-inline: auto; }
-    .section { padding: 84px 0; }
-    .section-heading { max-width: 680px; margin: 0 auto 42px; text-align: center; }
-    .eyebrow { display: inline-block; margin-bottom: 12px; color: var(--blue); font-size: .78rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
-    .section-heading h2 { margin-bottom: 14px; font-size: clamp(2rem, 4vw, 2.8rem); letter-spacing: -1.3px; }
-    .section-heading p { color: var(--muted); }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 49px; padding: 12px 22px; border: 1px solid transparent; border-radius: 12px; font: inherit; font-weight: 700; cursor: pointer; transition: transform .2s, background .2s; }
-    .btn:hover { transform: translateY(-2px); }
-    .btn-primary { color: #fff; background: var(--blue); box-shadow: 0 8px 20px rgba(8,126,155,.18); }
-    .btn-primary:hover { background: #06667e; }
-    .btn-outline { color: var(--navy); border-color: #cbd9e7; background: #fff; }
-    .navbar { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(14px); }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 20px; }
-    .brand { display: flex; align-items: center; gap: 11px; font-family: "Manrope", sans-serif; font-size: 1.12rem; font-weight: 800; color: var(--navy); white-space: nowrap; }
-    .brand-icon { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 13px; color: #fff; background: linear-gradient(135deg, var(--blue), var(--teal)); font-size: 1.4rem; }
-    .nav-links { display: flex; align-items: center; gap: 25px; font-size: .92rem; font-weight: 600; }
-    .nav-links a:not(.btn):hover { color: var(--blue); }
-    .menu-toggle { display: none; border: 0; background: transparent; color: var(--navy); font-size: 1.7rem; cursor: pointer; }
-    .hero { position: relative; overflow: hidden; padding: 78px 0 86px; background: radial-gradient(ellipse at 85% 15%, rgba(22,184,174,.16), transparent 34%), radial-gradient(ellipse at 0% 100%, rgba(8,126,155,.10), transparent 35%), linear-gradient(135deg, #f4f9ff 0%, #edf8fb 100%); }
-    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 54px; }
-    .hero-tag { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 23px; padding: 7px 13px; border: 1px solid #d4e8ee; border-radius: 50px; color: #086e83; background: rgba(255,255,255,.8); font-size: .8rem; font-weight: 700; }
-    .hero-tag span { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
-    .hero h1 { margin-bottom: 23px; font-size: clamp(2.65rem, 5.2vw, 4.2rem); letter-spacing: -2.8px; }
-    .hero h1 span { color: var(--blue); }
-    .hero-copy { max-width: 540px; margin-bottom: 30px; color: var(--muted); font-size: 1.08rem; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; }
-    .hero-note { display: flex; align-items: center; gap: 9px; margin-top: 24px; color: var(--muted); font-size: .88rem; }
-    .hero-note strong { color: var(--navy); }
-    .hero-visual { position: relative; min-height: 390px; display: grid; place-items: center; border-radius: 28px; overflow: hidden; background: radial-gradient(circle at 70% 25%, rgba(22,184,174,.28), transparent 25%), linear-gradient(145deg, #dff2f8, #c6e5ef); box-shadow: 0 25px 55px rgba(16,43,73,.12); }
-    .medical-illustration { font-size: clamp(7rem, 17vw, 12rem); filter: drop-shadow(0 15px 18px rgba(16,43,73,.12)); }
-    .hero-float { position: absolute; right: 18px; bottom: 20px; padding: 15px 18px; border: 1px solid rgba(255,255,255,.85); border-radius: 15px; background: rgba(255,255,255,.96); box-shadow: var(--shadow); color: var(--navy); font-weight: 700; }
-    .hero-float small { display: block; color: var(--muted); font-weight: 500; }
-    .benefits { padding: 30px 0; border-bottom: 1px solid var(--border); }
-    .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-    .benefit { display: flex; align-items: center; gap: 13px; }
-    .benefit-icon { display: grid; flex-shrink: 0; width: 48px; height: 48px; place-items: center; border-radius: 14px; color: var(--blue); background: #eaf6fb; font-size: 1.35rem; }
-    .benefit strong { display: block; color: var(--navy); font-size: .91rem; }
-    .benefit small { color: var(--muted); font-size: .78rem; }
-    .departments { background: var(--light); }
-    .department-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-    .department-card { padding: 25px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; text-align: center; transition: transform .2s, box-shadow .2s; }
-    .department-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
-    .department-card span { display: block; margin-bottom: 13px; font-size: 2.2rem; }
-    .department-card h3 { margin-bottom: 8px; font-size: 1.05rem; }
-    .department-card p { color: var(--muted); font-size: .88rem; }
-    .about-grid { display: grid; grid-template-columns: .9fr 1.1fr; align-items: center; gap: 60px; }
-    .about-art { display: grid; min-height: 340px; place-items: center; border-radius: 26px; background: radial-gradient(circle at 75% 25%, rgba(22,184,174,.25), transparent 30%), linear-gradient(145deg, #e5f4fc, #f1f8fc); }
-    .about-art-inner { display: grid; width: 180px; height: 180px; place-items: center; border: 1px solid rgba(8,126,155,.15); border-radius: 42px; background: rgba(255,255,255,.8); box-shadow: var(--shadow); font-size: 4.7rem; }
-    .about-copy h2 { margin-bottom: 20px; font-size: clamp(2rem, 4vw, 2.7rem); letter-spacing: -1.3px; }
-    .about-copy > p { margin-bottom: 25px; color: var(--muted); }
-    .check-list { display: grid; gap: 14px; margin-bottom: 28px; list-style: none; }
-    .check-list li { display: flex; align-items: flex-start; gap: 12px; font-weight: 600; }
-    .check { display: grid; flex-shrink: 0; width: 25px; height: 25px; place-items: center; border-radius: 50%; color: #087b73; background: #e2f8f1; font-size: .8rem; }
-    .assistant-section { padding: 78px 0; background: var(--navy); color: #fff; }
-    .assistant-grid { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 35px; }
-    .assistant-section h2 { margin-bottom: 15px; color: #fff; font-size: clamp(2rem, 4vw, 2.8rem); }
-    .assistant-section p { max-width: 650px; color: #c5d4e2; }
-    .assistant-icon { display: grid; width: 100px; height: 100px; place-items: center; border: 1px solid rgba(255,255,255,.18); border-radius: 28px; background: rgba(255,255,255,.08); font-size: 3.1rem; }
-    .chat-section { background: var(--light); }
-    .chat-panel { width: min(900px, 100%); margin: 0 auto; overflow: hidden; border: 1px solid var(--border); border-radius: 20px; background: #fff; box-shadow: var(--shadow); }
-    .chat-panel-heading { padding: 22px 25px; color: #fff; background: var(--blue); }
-    .chat-panel-heading h3 { color: #fff; margin-bottom: 5px; }
-    .chat-panel-heading p { color: #e5f8fa; font-size: .9rem; }
-    #n8n-chat { width: 100%; min-height: 520px; }
-    .notice { padding: 16px 22px 22px; color: var(--muted); font-size: .82rem; line-height: 1.6; text-align: center; }
-    .contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 45px; }
-    .contact-copy h2 { margin-bottom: 17px; font-size: 2.35rem; letter-spacing: -1px; }
-    .contact-copy p { margin-bottom: 22px; color: var(--muted); }
-    .contact-item { display: flex; align-items: flex-start; gap: 13px; margin: 17px 0; }
-    .contact-item > span { display: grid; width: 44px; height: 44px; flex-shrink: 0; place-items: center; border-radius: 12px; background: #eaf6fb; font-size: 1.2rem; }
-    .contact-item strong { display: block; color: var(--navy); font-size: .92rem; }
-    .contact-item small { color: var(--muted); }
-    .contact-note { padding: 27px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); }
-    .contact-note h3 { margin-bottom: 12px; }
-    .contact-note p { margin-bottom: 18px; color: var(--muted); }
-    footer { padding: 32px 0; color: #c3d1df; background: #0b2036; }
-    .footer-top { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,.12); }
-    .footer-brand { color: #fff; }
-    .footer-links { display: flex; flex-wrap: wrap; gap: 20px; font-size: .88rem; }
-    .footer-links a:hover { color: #fff; }
-    .footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 20px; font-size: .82rem; }
-    @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
-      .benefits-grid { grid-template-columns: repeat(2, 1fr); }
-      .department-grid { grid-template-columns: repeat(2, 1fr); }
-      .nav-links { gap: 14px; }
+    button { font: inherit; cursor: pointer; }
+    .page { min-height: 100vh; background: radial-gradient(circle at 10% 0%, rgba(13,156,145,.09), transparent 30%), var(--background); }
+    .container { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+
+    .topbar { background: rgba(255,255,255,.94); border-bottom: 1px solid var(--border); }
+    .topbar-inner { min-height: 76px; display: flex; justify-content: space-between; align-items: center; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { width: 43px; height: 43px; border-radius: 14px; display: grid; place-items: center; color: white; background: linear-gradient(145deg, #15b6a6, #087e83); box-shadow: 0 8px 20px rgba(13,156,145,.2); }
+    .brand-mark svg { width: 25px; height: 25px; }
+    .brand-name { color: var(--navy); font: 800 17px/1.2 "Manrope", sans-serif; letter-spacing: -.4px; }
+    .brand-tagline { margin-top: 4px; color: #8394a2; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; }
+    .top-actions { display: flex; align-items: center; gap: 12px; }
+    .status-pill { display: inline-flex; align-items: center; gap: 8px; color: #287a6d; background: #edf8f4; border: 1px solid #d9eee7; padding: 8px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #1aa783; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 15px; border: 0; border-radius: 11px; font-size: 12px; font-weight: 800; }
+    .button-primary { color: white; background: var(--teal); box-shadow: 0 7px 16px rgba(13,156,145,.18); }
+    .button-primary:hover { background: var(--teal-dark); }
+    .button-light { color: #34566e; background: #f0f5f8; border: 1px solid var(--border); }
+
+    main { padding: 38px 0 22px; }
+    .hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin-bottom: 24px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--teal); font-size: 10px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; }
+    .eyebrow-line { width: 20px; height: 2px; background: var(--teal); }
+    h1, h2, h3 { font-family: "Manrope", sans-serif; color: var(--navy); }
+    h1 { max-width: 690px; margin: 12px 0; font-size: clamp(30px, 4.3vw, 45px); line-height: 1.12; letter-spacing: -1.7px; }
+    .hero p { max-width: 660px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .hero-card { flex: 0 0 190px; padding: 15px 17px; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 8px 26px rgba(18,48,74,.04); }
+    .hero-card-label { color: #8a9aa7; font-size: 9px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; }
+    .hero-card-value { margin-top: 7px; color: var(--navy); font: 800 20px "Manrope", sans-serif; }
+    .hero-card-sub { margin-top: 3px; color: var(--muted); font-size: 10px; }
+
+    .notice { display: flex; align-items: flex-start; gap: 11px; margin-bottom: 19px; padding: 12px 14px; color: #805c27; background: #fff9ed; border: 1px solid #f0e2c6; border-radius: 13px; font-size: 11px; line-height: 1.6; }
+    .notice-icon { flex: 0 0 27px; width: 27px; height: 27px; display: grid; place-items: center; border-radius: 8px; background: #f8e9c9; font-weight: 900; }
+    .notice strong { color: #694719; }
+
+    .layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(270px, .78fr); gap: 20px; align-items: start; }
+    .panel { overflow: hidden; background: var(--white); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow); }
+    .panel-head { min-height: 75px; padding: 16px 19px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+    .assistant-icon { width: 42px; height: 42px; flex: 0 0 42px; display: grid; place-items: center; color: #087f78; background: var(--mint); border-radius: 14px; }
+    .assistant-icon svg { width: 22px; height: 22px; }
+    .panel-title { color: var(--navy); font: 800 14px "Manrope", sans-serif; }
+    .panel-subtitle { margin-top: 4px; color: #8193a1; font-size: 10px; }
+    .panel-badge { margin-left: auto; padding: 6px 9px; border-radius: 99px; color: #278072; background: #edf8f4; font-size: 9px; font-weight: 800; letter-spacing: .5px; white-space: nowrap; }
+
+    #n8n-chat { display: none; width: 100%; height: 580px; min-height: 500px; background: white; }
+    .setup-state { min-height: 580px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 36px; text-align: center; }
+    .setup-symbol { display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 15px; border-radius: 20px; color: #087f78; background: var(--mint); font-size: 28px; }
+    .setup-state h2 { margin: 0 0 8px; font-size: 19px; }
+    .setup-state p { max-width: 420px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .setup-code { max-width: 100%; margin-top: 16px; padding: 10px 12px; border: 1px dashed #bddbd5; border-radius: 9px; background: #f7fcfa; color: #315b60; font: 11px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+    .setup-help { margin-top: 12px !important; font-size: 10px !important; }
+    .setup-help a { color: var(--teal-dark); font-weight: 700; text-decoration: underline; }
+    body.n8n-connected #n8n-chat { display: block; }
+    body.n8n-connected .setup-state { display: none; }
+    body.n8n-connected .panel-badge { color: #087f78; background: #e6f8f3; }
+
+    .sidebar { display: flex; flex-direction: column; gap: 18px; }
+    .services, .privacy { padding: 18px; }
+    .section-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .section-head h2, .privacy h2 { margin: 0; font-size: 14px; letter-spacing: -.3px; }
+    .section-head span { color: #90a0ad; font-size: 10px; }
+    .service { display: flex; align-items: center; gap: 11px; padding: 12px 0; border-bottom: 1px solid #edf2f5; }
+    .service:last-child { padding-bottom: 0; border-bottom: 0; }
+    .service-symbol { width: 36px; height: 36px; flex: 0 0 36px; display: grid; place-items: center; border-radius: 11px; color: #337f82; background: #f0f8f8; font-size: 16px; }
+    .service-name { color: #29475e; font-size: 11px; font-weight: 800; }
+    .service-description { margin-top: 3px; color: #8b9ba8; font-size: 9px; line-height: 1.5; }
+    .privacy { color: var(--muted); }
+    .privacy h2 { margin-bottom: 11px; }
+    .privacy-item { display: flex; align-items: flex-start; gap: 9px; margin: 10px 0; font-size: 10px; line-height: 1.65; }
+    .check { display: grid; place-items: center; flex: 0 0 18px; width: 18px; height: 18px; border-radius: 6px; color: #138a7a; background: #e7f7f2; font-size: 10px; font-weight: 900; }
+    .sample-label { display: inline-block; margin-top: 8px; padding: 6px 8px; border-radius: 7px; color: #80682e; background: #fbf5e7; border: 1px solid #f0e7cd; font-size: 8px; font-weight: 900; letter-spacing: .6px; }
+    footer { display: flex; justify-content: space-between; gap: 16px; padding: 19px 4px 0; color: #92a1ad; font-size: 9px; }
+    footer strong { color: #60798b; }
+
+    @media (max-width: 850px) {
+      .hero { align-items: flex-start; }
+      .hero-card { flex-basis: 160px; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: grid; grid-template-columns: 1fr 1fr; }
     }
-    @media (max-width: 680px) {
-      .section { padding: 62px 0; }
-      .nav-inner { min-height: 68px; }
-      .brand { font-size: 1rem; }
-      .brand-icon { width: 39px; height: 39px; }
-      .menu-toggle { display: block; }
-      .nav-links { position: absolute; top: 68px; left: 0; right: 0; display: none; align-items: stretch; gap: 0; padding: 12px 5% 20px; border-bottom: 1px solid var(--border); background: #fff; }
-      .nav-links.open { display: flex; flex-direction: column; }
-      .nav-links a:not(.btn) { padding: 12px 0; }
-      .nav-links .btn { margin-top: 8px; }
-      .hero { padding: 54px 0 62px; }
-      .hero-grid, .about-grid, .contact-grid, .assistant-grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: clamp(2.5rem, 11vw, 3.7rem); letter-spacing: -1.8px; }
-      .hero-visual { min-height: 290px; }
-      .benefits-grid { gap: 20px 12px; }
-      .benefit { align-items: flex-start; gap: 10px; }
-      .benefit-icon { width: 40px; height: 40px; font-size: 1.1rem; }
-      .department-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .department-card { padding: 20px 12px; }
-      .about-art { min-height: 250px; }
-      .assistant-grid { gap: 24px; }
-      .assistant-icon { width: 72px; height: 72px; font-size: 2.3rem; }
-      .footer-top { align-items: flex-start; flex-direction: column; }
-      .footer-bottom { flex-direction: column; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    @media (max-width: 560px) {
+      .container { width: min(100% - 24px, 1160px); }
+      .topbar-inner { min-height: 68px; }
+      .brand-mark { width: 38px; height: 38px; }
+      .brand-name { font-size: 15px; }
+      .brand-tagline { font-size: 8px; }
+      .status-pill { display: none; }
+      main { padding-top: 26px; }
+      .hero { display: block; }
+      .hero-card { display: none; }
+      h1 { font-size: 32px; }
+      .sidebar { display: flex; }
+      .panel { border-radius: 16px; }
+      .panel-head { padding: 14px; }
+      .panel-badge { font-size: 8px; padding: 6px 7px; }
+      #n8n-chat, .setup-state { height: 560px; min-height: 560px; }
+      .setup-state { padding: 22px; }
+      footer { flex-direction: column; gap: 5px; }
     }
   </style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="container nav-inner">
-      <a href="#home" class="brand" aria-label="Hospital AI home">
-        <span class="brand-icon">✚</span><span>Hospital AI</span>
-      </a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
-        <a href="#home">Home</a>
-        <a href="#departments">Departments</a>
-        <a href="#about">About</a>
-        <a href="#assistant">AI Assistant</a>
-        <a class="btn btn-primary" href="#assistant">Ask a Question ↗</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero" id="home">
-      <div class="container hero-grid">
-        <div>
-          <div class="hero-tag"><span></span> HOSPITAL INFORMATION & PATIENT SUPPORT</div>
-          <h1>Care that puts <span>people first.</span></h1>
-          <p class="hero-copy">Find general information about hospital departments, appointment enquiries, billing support, and how to reach the right team.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#departments">Explore Departments →</a>
-            <button class="btn btn-outline" id="chatCta" type="button">✦ Chat with AI Assistant</button>
+  <div class="page">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="#home" aria-label="Hospital home">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>
           </div>
-          <p class="hero-note"><span>✓</span><span><strong>Here to help, 24/7</strong> — with general hospital information.</span></p>
-        </div>
-        <div class="hero-visual" role="img" aria-label="Medical cross illustration">
-          <div class="medical-illustration" aria-hidden="true">🏥</div>
-          <div class="hero-float">Patient information<small>Helpful guidance, one step at a time</small></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="benefits" aria-label="Support options">
-      <div class="container benefits-grid">
-        <div class="benefit"><div class="benefit-icon">🩺</div><div><strong>Department Info</strong><small>Explore hospital services</small></div></div>
-        <div class="benefit"><div class="benefit-icon">📅</div><div><strong>Appointments</strong><small>Learn how to enquire</small></div></div>
-        <div class="benefit"><div class="benefit-icon">₹</div><div><strong>Billing Support</strong><small>General billing guidance</small></div></div>
-        <div class="benefit"><div class="benefit-icon">🤝</div><div><strong>Human Assistance</strong><small>Find the right support team</small></div></div>
-      </div>
-    </section>
-
-    <section class="section departments" id="departments">
-      <div class="container">
-        <div class="section-heading">
-          <span class="eyebrow">Hospital Services</span>
-          <h2>Explore Our Departments</h2>
-          <p>Browse common hospital departments. Contact the hospital directly to confirm services, doctors, timings, and availability.</p>
-        </div>
-        <div class="department-grid">
-          <article class="department-card"><span>🩺</span><h3>General Medicine</h3><p>General health consultations and care information.</p></article>
-          <article class="department-card"><span>❤️</span><h3>Cardiology</h3><p>Information about heart-care services.</p></article>
-          <article class="department-card"><span>🦴</span><h3>Orthopedics</h3><p>Information about bone and joint services.</p></article>
-          <article class="department-card"><span>🧒</span><h3>Pediatrics</h3><p>Information about children's healthcare.</p></article>
-          <article class="department-card"><span>👂</span><h3>ENT</h3><p>Ear, nose, and throat department information.</p></article>
-          <article class="department-card"><span>🧠</span><h3>Neurology</h3><p>Information about nervous-system care services.</p></article>
-          <article class="department-card"><span>👁️</span><h3>Ophthalmology</h3><p>Information about eye-care services.</p></article>
-          <article class="department-card"><span>🩹</span><h3>Dermatology</h3><p>Information about skin-care services.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="about">
-      <div class="container about-grid">
-        <div class="about-art" aria-hidden="true"><div class="about-art-inner">🩺</div></div>
-        <div class="about-copy">
-          <span class="eyebrow">About the Assistant</span>
-          <h2>A simpler way to find hospital information</h2>
-          <p>The Hospital AI Assistant can help with general hospital enquiries and direct you toward the appropriate team. It is an information assistant, not a substitute for a qualified healthcare professional.</p>
-          <ul class="check-list">
-            <li><span class="check">✓</span> Ask about departments and general services</li>
-            <li><span class="check">✓</span> Get guidance about appointment enquiries</li>
-            <li><span class="check">✓</span> Find general billing and support information</li>
-            <li><span class="check">✓</span> Ask how to contact hospital staff</li>
-          </ul>
-          <a class="btn btn-primary" href="#assistant">Ask the AI Assistant →</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="assistant-section">
-      <div class="container assistant-grid">
-        <div>
-          <span class="eyebrow" style="color:#66e2d5">YOUR DIGITAL GUIDE</span>
-          <h2>Have a question? Let's help.</h2>
-          <p>Use the Hospital AI Assistant for general information. For urgent symptoms or a medical emergency, contact local emergency services or go to the nearest emergency department.</p>
-          <div style="margin-top:25px"><button class="btn btn-primary" id="chatCta2" type="button" style="background:#16b8ae;color:#102b49">Open Hospital Assistant ✦</button></div>
-        </div>
-        <div class="assistant-icon" aria-hidden="true">💬</div>
-      </div>
-    </section>
-
-    <section class="section chat-section" id="assistant">
-      <div class="container">
-        <div class="section-heading">
-          <span class="eyebrow">Hospital AI Assistant</span>
-          <h2>Chat with our assistant</h2>
-          <p>Ask a general question below. Please do not enter passwords, payment-card details, or private medical information.</p>
-        </div>
-        <div class="chat-panel">
-          <div class="chat-panel-heading">
-            <h3>💬 Hospital AI Assistant</h3>
-            <p>General hospital information and support</p>
+          <div>
+            <div class="brand-name">Hospital AI</div>
+            <div class="brand-tagline">HEALTHCARE NAVIGATION & SUPPORT</div>
           </div>
-          <div id="n8n-chat"></div>
-          <p class="notice">This chatbot does not diagnose conditions or provide emergency care. Do not use it for urgent medical decisions. Confirm hospital services, appointments, and billing details with hospital staff.</p>
+        </a>
+        <div class="top-actions">
+          <div class="status-pill"><span class="status-dot"></span><span id="status-text">Chat assistant</span></div>
+          <a class="button button-light" href="#assistant">Open assistant ↓</a>
         </div>
       </div>
-    </section>
+    </header>
 
-    <section class="section" id="contact">
-      <div class="container contact-grid">
-        <div class="contact-copy">
-          <span class="eyebrow">Need more help?</span>
-          <h2>Contact the hospital team</h2>
-          <p>For confirmed appointment times, doctor availability, bills, or personal medical questions, contact the hospital through its official channels.</p>
-          <div class="contact-item"><span>☎</span><div><strong>Hospital phone</strong><small>Add your official hospital phone number</small></div></div>
-          <div class="contact-item"><span>✉</span><div><strong>Email</strong><small>Add your official hospital email address</small></div></div>
-          <div class="contact-item"><span>⌖</span><div><strong>Location</strong><small>Add your hospital address</small></div></div>
+    <main class="container" id="home">
+      <section class="hero">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> CARE. GUIDANCE. SUPPORT.</div>
+          <h1>How can we help you today?</h1>
+          <p>Care can be complicated. Hospital AI helps you navigate appointment enquiries, provider information, billing FAQs, digital access and how to reach human assistance. This assistant is powered by your n8n workflow.</p>
         </div>
-        <div class="contact-note">
-          <h3>Important health and privacy notice</h3>
-          <p>This demonstration website provides general information only. It is not connected to a medical record system and cannot confirm appointments or payments.</p>
-          <p><strong>For an emergency:</strong> contact local emergency services or visit the nearest emergency department. Do not wait for a chatbot response.</p>
-          <p>Only add real hospital contact details after confirming them with the hospital.</p>
-        </div>
-      </div>
-    </section>
-  </main>
+        <aside class="hero-card" aria-label="Chat service status">
+          <div class="hero-card-label">Assistant status</div>
+          <div class="hero-card-value" id="hero-status">Setup needed</div>
+          <div class="hero-card-sub" id="hero-status-sub">Connect your n8n Chat URL</div>
+        </aside>
+      </section>
 
-  <footer>
-    <div class="container">
-      <div class="footer-top">
-        <a href="#home" class="brand footer-brand"><span class="brand-icon">✚</span><span>Hospital AI</span></a>
-        <nav class="footer-links" aria-label="Footer navigation">
-          <a href="#home">Home</a><a href="#departments">Departments</a><a href="#about">About</a><a href="#assistant">AI Assistant</a><a href="#contact">Contact</a>
-        </nav>
+      <div class="notice" role="note">
+        <div class="notice-icon" aria-hidden="true">!</div>
+        <div><strong>Demonstration only.</strong> This project uses fictional sample doctor names, schedules and fees. It does not provide diagnoses, book real appointments, access patient records, process payments or contact live staff. If you think someone is experiencing a medical emergency, contact local emergency services immediately.</div>
       </div>
-      <div class="footer-bottom"><p>© <span id="year"></span> Hospital AI Chatbot | Student project</p><p>Care. Guidance. Support.</p></div>
-    </div>
-  </footer>
+
+      <section class="layout" id="assistant">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="assistant-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 5.8A2.8 2.8 0 0 1 7.8 3h8.4A2.8 2.8 0 0 1 19 5.8v7.4a2.8 2.8 0 0 1-2.8 2.8H11l-4.5 3v-3.2A2.8 2.8 0 0 1 5 13.2V5.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 8h6M9 11.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <div class="panel-title">Hospital AI Assistant</div>
+              <div class="panel-subtitle" id="chat-subtitle">Care navigation · Providers · Billing · Support</div>
+            </div>
+            <div class="panel-badge" id="chat-state">N8N WORKFLOW</div>
+          </div>
+
+          <div id="n8n-chat" aria-label="Hospital AI chat assistant"></div>
+          <div class="setup-state" id="setup-state">
+            <div class="setup-symbol" aria-hidden="true">↗</div>
+            <h2>Connect your Hospital AI assistant</h2>
+            <p>To activate the live chat, paste your workflow's <strong>Production Chat URL</strong> into the <code>N8N_CHAT_URL</code> setting near the bottom of this file, save it, and redeploy the website.</p>
+            <div class="setup-code">PASTE_YOUR_N8N_PRODUCTION_CHAT_URL_HERE</div>
+            <p class="setup-help">Use the public URL from the n8n Chat Trigger in Embedded Chat mode. See the <a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-langchain.chattrigger/" target="_blank" rel="noopener noreferrer">n8n Chat Trigger guide</a>.</p>
+          </div>
+        </div>
+
+        <aside class="sidebar">
+          <section class="panel services">
+            <div class="section-head"><h2>How can Hospital AI help?</h2><span>6 topics</span></div>
+            <div class="service"><div class="service-symbol" aria-hidden="true">▦</div><div><div class="service-name">Appointment enquiries</div><div class="service-description">Explore booking steps and sample care services.</div></div></div>
+            <div class="service"><div class="service-symbol" aria-hidden="true">✚</div><div><div class="service-name">Provider information</div><div class="service-description">Fictional provider directory and specialties.</div></div></div>
+            <div class="service"><div class="service-symbol" aria-hidden="true">₹</div><div><div class="service-name">Billing enquiries</div><div class="service-description">Sample fees and general billing FAQs.</div></div></div>
+            <div class="service"><div class="service-symbol" aria-hidden="true">⌘</div><div><div class="service-name">Technical support</div><div class="service-description">Help with digital access and login issues.</div></div></div>
+            <div class="service"><div class="service-symbol" aria-hidden="true">☏</div><div><div class="service-name">Human assistance</div><div class="service-description">Guidance for reaching the appropriate care or support team.</div></div></div>
+            <div class="service"><div class="service-symbol" aria-hidden="true">?</div><div><div class="service-name">General questions</div><div class="service-description">Help finding the right care-related enquiry topic.</div></div></div>
+          </section>
+
+          <section class="panel privacy">
+            <h2>Before you start</h2>
+            <div class="privacy-item"><span class="check">✓</span><span>Use sample questions while testing the project.</span></div>
+            <div class="privacy-item"><span class="check">✓</span><span>Do not enter passwords, OTPs, payment details or private patient information.</span></div>
+            <div class="privacy-item"><span class="check">✓</span><span>Verify real doctors, availability and prices with the hospital.</span></div>
+            <div class="sample-label">FICTIONAL SAMPLE DATA · NOT FOR CLINICAL USE</div>
+          </section>
+        </aside>
+      </section>
+
+      <footer>
+        <span><strong>Hospital AI</strong> · Care navigation and support demo powered by n8n</span>
+        <span>Sample data only · No real appointment or payment processing</span>
+      </footer>
+    </main>
+  </div>
 
   <script type="module">
-    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
-
-    // Use the exact Chat URL displayed in your n8n Chat Trigger.
-    // This is the URL you previously supplied for the Hospital AI workflow.
+    // STEP 1: Replace this placeholder with the public Production Chat URL
+    // shown by your n8n Chat Trigger node (Embedded Chat mode).
+    // Example format: https://YOUR-N8N-DOMAIN/webhook/....../chat
     const N8N_CHAT_URL = 'https://sahithi1632.app.n8n.cloud/webhook/c894b9cb-371e-47b3-836c-77ce37fe3725/chat';
 
-    createChat({
-      webhookUrl: N8N_CHAT_URL,
-      target: '#n8n-chat',
-      mode: 'fullscreen',
-      showWelcomeScreen: false,
-      defaultLanguage: 'en',
-      chatInputKey: 'chatInput',
-      chatSessionKey: 'sessionId',
-      initialMessages: [
-        'Hello! Welcome to the Hospital AI Assistant.',
-        'I can help with general department, appointment, billing, and support enquiries. How can I help?'
-      ],
-      i18n: {
-        en: {
-          title: 'Hospital AI Assistant',
-          subtitle: 'General hospital information and support',
-          footer: '',
-          getStarted: 'Start a conversation',
-          inputPlaceholder: 'Type your question here...'
-        }
+    const configured = N8N_CHAT_URL.startsWith('https://') &&
+      !N8N_CHAT_URL.includes('PASTE_YOUR_N8N_PRODUCTION_CHAT_URL_HERE');
+
+    if (configured) {
+      try {
+        const { createChat } = await import('https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js');
+        createChat({
+          webhookUrl: N8N_CHAT_URL,
+          target: '#n8n-chat',
+          mode: 'fullscreen',
+          showWelcomeScreen: false,
+          loadPreviousSession: true,
+          defaultLanguage: 'en',
+          chatInputKey: 'chatInput',
+          chatSessionKey: 'sessionId',
+          initialMessages: [
+            'Hello! Welcome to Hospital AI.',
+            'I can help you navigate appointment enquiries, provider information, billing FAQs, digital support and human assistance. This is a sample-data demonstration.'
+          ],
+          i18n: {
+            en: {
+              title: 'Hospital AI Assistant',
+              subtitle: 'Care navigation and support',
+              footer: 'Sample data only · No medical advice',
+              getStarted: 'Start a conversation',
+              inputPlaceholder: 'Type your question here...'
+            }
+          }
+        });
+        document.body.classList.add('n8n-connected');
+        document.getElementById('status-text').textContent = 'Workflow connected';
+        document.getElementById('hero-status').textContent = 'Connected';
+        document.getElementById('hero-status-sub').textContent = 'Powered by your n8n workflow';
+        document.getElementById('chat-state').textContent = 'N8N CONNECTED';
+        document.getElementById('chat-subtitle').textContent = 'Connected to your Hospital AI workflow';
+      } catch (error) {
+        console.error('Could not load the n8n chat widget:', error);
+        document.getElementById('hero-status').textContent = 'Connection issue';
+        document.getElementById('hero-status-sub').textContent = 'Check the Chat URL and n8n settings';
+        document.getElementById('chat-state').textContent = 'CHECK CONNECTION';
       }
-    });
-  </script>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    const menuToggle = document.getElementById('menuToggle');
-    const navLinks = document.getElementById('navLinks');
-    menuToggle.addEventListener('click', () => {
-      const isOpen = navLinks.classList.toggle('open');
-      menuToggle.setAttribute('aria-expanded', String(isOpen));
-      menuToggle.textContent = isOpen ? '✕' : '☰';
-    });
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.textContent = '☰';
-      });
-    });
-
-    function goToAssistant() {
-      document.getElementById('assistant').scrollIntoView({ behavior: 'smooth' });
     }
-    document.getElementById('chatCta').addEventListener('click', goToAssistant);
-    document.getElementById('chatCta2').addEventListener('click', goToAssistant);
   </script>
 </body>
 </html>
